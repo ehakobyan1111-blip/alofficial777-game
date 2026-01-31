@@ -1,0 +1,183 @@
+<!-- <!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎁 Տուփ բացելու խաղ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="h1">
+        <h1>🎁 Ընտրիր մեկ տուփ</h1>
+<p id="message"></p>
+    </div>
+
+<div class="grid">
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+</div>
+
+<button id="refreshBtn">Խաղալ նորից 🔄</button>
+
+  <script>
+  const boxes = document.querySelectorAll(".box");
+  const message = document.getElementById("message");
+  const refreshBtn = document.getElementById("refreshBtn");
+
+  let gameOver = false;
+  let winAmount = ""; // 🔥 server-ից կգա
+  let winIndex = Math.floor(Math.random() * boxes.length);
+
+  // fetch reward from server
+  fetch("http://localhost:3001/game/reward")
+    .then(res => res.json())
+    .then(data => {
+      winAmount = data.reward;
+      console.log("Reward from server:", winAmount);
+      startGame(); // ✅ խաղը սկսում ենք ՄԻԱՅՆ հիմա
+    });
+
+  function startGame() {
+    boxes.forEach(box => {
+      box.style.backgroundImage = "url('img/cammon.jpg')";
+    });
+
+    boxes.forEach((box, index) => {
+      box.addEventListener("click", () => {
+        if (gameOver) return;
+
+        gameOver = true;
+        box.style.backgroundImage = "none";
+        box.style.backgroundColor = "#fff";
+        box.style.color = "#000";
+        box.style.fontSize = "18px";
+        box.style.fontWeight = "bold";
+
+        if (index === winIndex) {
+          box.textContent = winAmount;
+          message.textContent = `🎉 Շնորհավորում ենք, դու հաղթեցիր ${winAmount}`;
+        } else {
+          box.textContent = "X";
+          message.textContent = "❌ Ցավոք, դու չհաղթեցիր";
+        }
+      });
+    });
+  }
+
+  refreshBtn.addEventListener("click", () => {
+    location.reload();
+  });
+</script>
+
+<link rel="stylesheet" href="admin.html">
+</body>
+</html> -->
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎁 Տուփ բացելու խաղ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="h1">
+    <h1>🎁 Ընտրիր մեկ տուփ</h1>
+    <p id="message"></p>
+  </div>
+
+  <div class="grid">
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+  <div class="box" style="background-image:url('img/cammon.jpg')"></div>
+</div>
+
+  <button id="refreshBtn">Խաղալ նորից 🔄</button>
+
+  <!-- ✅ ՄԻԱՅՆ ՄԵԿ SCRIPT -->
+  <script>
+    const boxes = document.querySelectorAll(".box");
+    const message = document.getElementById("message");
+    const refreshBtn = document.getElementById("refreshBtn");
+
+    let gameOver = false;
+    let winAmount = "";
+    let winIndex = Math.floor(Math.random() * boxes.length);
+
+    // 🔹 Գումարը գալիս է server-ից (Admin Panel)
+    fetch("http://localhost:3001/game/reward")
+      .then(res => res.json())
+      .then(data => {
+        winAmount = data.reward;
+        startGame();
+      })
+      .catch(err => {
+        console.error(err);
+        message.textContent = "❌ Server-ի հետ կապ չկա";
+      });
+
+    function startGame() {
+      gameOver = false;
+      message.textContent = "";
+
+      boxes.forEach((box, index) => {
+        box.textContent = "";
+        box.style.backgroundImage = "url('img/cammon.jpg')";
+        box.style.backgroundColor = "";
+        box.style.color = "#000";
+
+        // ✅ MOBILE + PC FIX
+        box.onpointerdown = (e) => {
+          e.preventDefault();
+          if (gameOver) return;
+
+          gameOver = true;
+          box.style.backgroundImage = "none";
+          box.style.backgroundColor = "#fff";
+          box.style.fontSize = "18px";
+          box.style.fontWeight = "bold";
+
+          if (index === winIndex) {
+            box.textContent = winAmount;
+            message.textContent = `🎉 Շնորհավորում ենք, դու հաղթեցիր ${winAmount}`;
+          } else {
+            box.textContent = "X";
+            message.textContent = "❌ Ցավոք, դու չհաղթեցիր";
+          }
+        };
+      });
+    }
+
+    refreshBtn.onclick = () => location.reload();
+  </script>
+
+</body>
+</html>

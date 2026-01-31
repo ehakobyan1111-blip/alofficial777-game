@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+</head>
+<body>
+  <h2>Admin Panel</h2>
+
+  <input id="reward" placeholder="Օրինակ՝ 1000 AMD">
+  <button onclick="save()">Save</button>
+
+  <script>
+    async function save() {
+      const reward = document.getElementById("reward").value;
+
+      await fetch("http://localhost:3001/admin/reward", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reward })
+      });
+
+      alert("Պահպանվեց ✅");
+    }
+  </script>
+
+</body>
+</html>
