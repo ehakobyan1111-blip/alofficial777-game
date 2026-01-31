@@ -5,24 +5,38 @@
   <title>Admin Panel</title>
 </head>
 <body>
-  <h2>Admin Panel</h2>
 
-  <input id="reward" placeholder="Օրինակ՝ 1000 AMD">
-  <button onclick="save()">Save</button>
+<h2>Խաղի գումար</h2>
 
-  <script>
-    async function save() {
-      const reward = document.getElementById("reward").value;
+<input id="rewardInput" placeholder="օր․ 1000 դրամ">
+<button onclick="saveReward()">Պահել</button>
 
-      await fetch("http://localhost:3001/admin/reward", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reward })
-      });
+<p id="status"></p>
 
-      alert("Պահպանվեց ✅");
+<script>
+async function saveReward() {
+  const value = document.getElementById("rewardInput").value;
+  const status = document.getElementById("status");
+
+  try {
+    const response = await fetch("http://192.168.0.106:3001/admin/reward", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ reward: value })
+    });
+
+    if (response.ok) {
+      status.innerText = "Հաջողությամբ պահպանվեց!";
+      status.style.color = "green";
+    } else {
+      status.innerText = "Սխալ տեղի ունեցավ:";
     }
-  </script>
+  } catch (err) {
+    status.innerText = "Սերվերը չի արձագանքում:";
+    console.error(err);
+  }
+}
+</script>
 
 </body>
 </html>
